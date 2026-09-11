@@ -1,0 +1,132 @@
+# Репозиторий семинаров курса "Продвинутый Python" (АМИ ВШЭ, осень 2026).
+#
+# Это НЕ пакет — здесь только материалы и tooling для их прогона.
+# Конфиги ruff/mypy намеренно совпадают с курсовыми: то, что зелено здесь,
+# зелено и в CI курса.
+
+[project]
+name = "ami-python-advanced-seminars"
+version = "0.1.0"
+description = "Материалы семинаров курса Продвинутый Python (АМИ ВШЭ, 26f)"
+requires-python = ">=3.14"
+dependencies = []
+
+[dependency-groups]
+# PEP 735. Ставится автоматически при `uv sync`, в отличие от
+# optional-dependencies не является частью метаданных пакета.
+dev = [
+  # ноутбуки с теорией
+  "jupyterlab>=4.2",
+  "ipykernel>=6.29",
+  "nbclient>=0.10",      # прогон ноутбука в CI/локально без UI
+  "nbformat>=5.10",      # валидация + снятие outputs
+  # линт/типы/тесты материалов
+  "ruff>=0.6",
+  "mypy>=1.10",
+  "pytest>=8",
+  # демонстрации на семинаре 1 (packaging)
+  "build>=1.2",          # референсный build-frontend от PyPA
+  "twine>=5.1",          # классическая публикация (альтернатива uv publish)
+  "hatchling>=1.25",     # backend, который выбираем в задаче
+]
+
+[tool.uv]
+# Сам репозиторий не собирается в пакет — только среда для материалов.
+package = false
+
+[tool.ruff]
+line-length = 100
+target-version = "py314"
+exclude = [
+  ".venv", ".tox", ".mypy_cache", ".pytest_cache", ".ruff_cache",
+  "build", "dist", "_build", "__pycache__",
+  # Ноутбуки лекций/семинаров содержат %%bash-ячейки — ruff их не понимает.
+  "*.ipynb",
+  # Шаблонные конфиги с TODO-дырами и локальные эталоны.
+  "tmp",
+]
+
+[tool.ruff.format]
+line-ending = "lf"
+quote-style = "double"
+docstring-code-format = true
+docstring-code-line-length = 80
+
+[tool.ruff.lint]
+select = [
+  "E",    # pycodestyle errors
+  "F",    # pyflakes
+  "W",    # pycodestyle warnings
+  "I",    # isort
+  "N",    # pep8-naming
+  "UP",   # pyupgrade — современный Python (3.14+)
+  "B",    # flake8-bugbear
+  "SIM",  # flake8-simplify
+  "RUF",  # ruff-specific
+  "PTH",  # flake8-use-pathlib
+  "ANN",  # flake8-annotations — типы обязательны (согласуется с mypy strict)
+  "S",    # flake8-bandit
+  "TCH",  # flake8-type-checking
+  "TID",  # flake8-tidy-imports
+  "PERF", # perflint
+  "PL",   # pylint (базовые)
+]
+ignore = [
+  "E501",    # line-too-long — форматтер сам разберётся
+  "COM812",  # missing-trailing-comma — форматтер сам
+  "ANN002",  # missing type annotation for *args
+  "ANN003",  # missing type annotation for **kwargs
+  "PLR0912", # too many branches — арбитрарный лимит
+  "PLR0913", # too many arguments — часто нужно
+  "PLR0917", # too many positional arguments
+  "S603",    # subprocess call: untrusted input — false positive почти всегда
+  "RUF001",  # ambiguous unicode в строках
+  "RUF002",  # ambiguous unicode в docstring
+  "RUF003",  # ambiguous unicode в comments
+             # ^ весь репозиторий русскоязычный: сообщения, условия задач,
+             #   комментарии. Кириллическую `с` не спутать с латинской `c`,
+             #   потому что вокруг неё такой же кириллический текст.
+  "TC001",   # move first-party import into TYPE_CHECKING
+  "TC002",   # то же для third-party
+  "TC003",   # то же для stdlib
+]
+fixable = ["ALL"]
+
+[tool.ruff.lint.per-file-ignores]
+"**/test_*.py" = [
+  "ANN", "S101", "S105", "S106", "PLR2004", "ARG", "SLF001",
+  "PLC0415", "E402", "SIM300", "RUF001", "I001", "PTH123",
+]
+"**/conftest.py" = ["ANN", "S101", "PLR2004", "ARG", "PLC0415"]
+# Верификатор публикации — CLI-скрипт: print'ы и кириллица в сообщениях норма.
+"**/check_publication.py" = ["T201"]
+
+[tool.ruff.lint.isort]
+force-sort-within-sections = true
+section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
+
+[tool.ruff.lint.flake8-tidy-imports]
+# Только абсолютные импорты — как в курсе.
+ban-relative-imports = "all"
+
+[tool.mypy]
+python_version = "3.14"
+strict = true
+exclude = [
+  "test_.*\\.py$",
+  "conftest\\.py$",
+  "^tmp/",
+]
+
+# nbformat/nbclient без py.typed — их функции для mypy "untyped", а strict
+# на такие вызовы ругается. follow_imports=skip делает их Any.
+[[tool.mypy.overrides]]
+module = ["nbformat.*", "nbclient.*"]
+ignore_missing_imports = true
+follow_imports = "skip"
+
+[tool.pytest.ini_options]
+# Тесты самих материалов. Тесты задач (seminars/**/task/**) сюда не входят:
+# они требуют установленного пакета задачи и гоняются в её собственном venv.
+testpaths = ["tests"]
+pythonpath = ["tools", "seminars/01-packaging/task"]
