@@ -4,7 +4,7 @@
 #   curl -LsSf https://astral.sh/uv/install.sh | sh (Linux/WSL)
 
 .DEFAULT_GOAL := help
-.PHONY: help sync lint fmt typecheck test nb nb-clean nb-run check-pub check-typing
+.PHONY: help sync lint fmt typecheck test nb nb-clean nb-run check-pub check-typing check-plugin
 
 help:  ## показать этот список
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
@@ -31,13 +31,16 @@ nb:  ## запустить JupyterLab
 	uv run jupyter lab
 
 nb-run:  ## прогнать все ноутбуки целиком (проверка, что не сгнили)
-	uv run python tools/nb.py run seminars
+	uv run python tools/nb.py run seminars notebooks
 
 nb-clean:  ## снять outputs со всех ноутбуков перед коммитом
-	uv run python tools/nb.py clean seminars
+	uv run python tools/nb.py clean seminars notebooks
 
 check-pub:  ## семинар 1: проверить публикацию: make check-pub USERNAME=ivanov
 	uv run python seminars/01-packaging/task/check_publication.py --username $(USERNAME)
 
 check-typing:  ## семинар 2: проверить починку gradebook.py
 	uv run python seminars/02-typing/task/check_typing.py
+
+check-plugin:  ## семинар 3: проверить плагин pytest-maxduration
+	uv run python seminars/03-testing/task/check_plugin.py

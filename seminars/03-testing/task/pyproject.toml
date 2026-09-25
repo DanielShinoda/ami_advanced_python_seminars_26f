@@ -1,0 +1,16 @@
+[project]
+name = "pytest-maxduration"
+version = "0.1.0"
+description = "Маркер max_duration: роняет тесты, которые идут слишком долго"
+requires-python = ">=3.10"
+dependencies = ["pytest>=8"]
+
+# TODO 5: чтобы pytest находил плагин сам после установки, без conftest.py.
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+# TODO 6: явно сказать backend'у, что пакуется один модуль, а не пакет.
+#   Setuptools угадает и сам, пока в папке один .py, — но угадывание
+#   ломается, стоит появиться второму файлу.

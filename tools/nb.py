@@ -64,12 +64,12 @@ def run(path: Path) -> None:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("command", choices=["run", "clean", "check"])
-    parser.add_argument("root", type=Path, help="директория с ноутбуками")
+    parser.add_argument("roots", type=Path, nargs="+", help="директории с ноутбуками")
     args = parser.parse_args(argv)
 
-    notebooks = find_notebooks(args.root)
+    notebooks = [path for root in args.roots for path in find_notebooks(root)]
     if not notebooks:
-        print(f"ноутбуков не найдено под {args.root}")
+        print(f"ноутбуков не найдено под {args.roots}")
         return 0
 
     failed = 0

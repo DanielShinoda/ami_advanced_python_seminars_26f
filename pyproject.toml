@@ -24,15 +24,25 @@ dev = [
   "ruff>=0.6",
   "mypy>=1.10",
   "pytest>=8",
+  # семинар 3: параллельный прогон — для демонстрации scope под -n 2
+  "pytest-xdist>=3",
+  # minipipe — сквозной пакет курса. Только numpy: никакой магии под
+  # капотом, всё что тестируем и ускоряем написано нами.
+  "numpy>=2",
   # демонстрации на семинаре 1 (packaging)
   "build>=1.2",          # референсный build-frontend от PyPA
   "twine>=5.1",          # классическая публикация (альтернатива uv publish)
   "hatchling>=1.25",     # backend, который выбираем в задаче
 ]
 
-[tool.uv]
-# Сам репозиторий не собирается в пакет — только среда для материалов.
-package = false
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+# minipipe ставится в окружение при `uv sync` — поэтому `import minipipe`
+# работает и в скриптах, и в тестах, и из любой директории.
+packages = ["minipipe"]
 
 [tool.ruff]
 line-length = 100
@@ -100,6 +110,13 @@ fixable = ["ALL"]
 "**/conftest.py" = ["ANN", "S101", "PLR2004", "ARG", "PLC0415"]
 # Верификатор публикации — CLI-скрипт: print'ы и кириллица в сообщениях норма.
 "**/check_publication.py" = ["T201"]
+# Демонстрации семинара 3 — учебные примеры: те же послабления, что для тестов,
+# плюс намеренно «неправильные» приёмы (фикстура, роняющая прогон).
+"seminars/03-testing/demo/**/*.py" = ["ANN", "S101", "PLR2004", "I001", "PT004", "BLE001"]
+# Тесты-подопытные для плагина: их гоняет верификатор, не общий pytest.
+"seminars/03-testing/task/tests/*.py" = ["ANN", "S101", "PLR2004"]
+# Заготовка плагина: импорты стоят заранее, под TODO.
+"seminars/03-testing/task/pytest_maxduration.py" = ["F401", "ARG001"]
 
 [tool.ruff.lint.isort]
 force-sort-within-sections = true
@@ -120,6 +137,8 @@ exclude = [
   # нашёл mypy. Общий `make typecheck` её не проверяет, иначе он всегда
   # красный. Проверяет её верификатор задачи.
   "seminars/02-typing/task/gradebook\\.py$",
+  # Демонстрации семинара 3 и вводный пример — учебный код без аннотаций.
+  "^seminars/03-testing/demo/",
 ]
 
 # nbformat/nbclient без py.typed — их функции для mypy "untyped", а strict
