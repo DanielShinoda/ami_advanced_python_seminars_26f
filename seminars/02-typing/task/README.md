@@ -35,9 +35,9 @@ make check-typing        # из корня репозитория
 |---|---|
 | `average([])` | `0.0` |
 | `average([8, 10, 6])` | `8.0` |
-| `score_of(students, "Иванов")` | средний балл |
+| `score_of(students, "Алиса")` | средний балл |
 | `score_of(students, "Никого")` | `KeyError("Никого")` |
-| `summary_line(Student("Иванов", "БПМИ251", [8, 10]))` | `"Иванов — 9.00"` |
+| `summary_line(Student("Алиса", "БПМИ251", [8, 10]))` | `"Алиса — 9.00"` |
 | `print_auditors([Auditor(...)])` | печатает, mypy молчит |
 | `publish_to_console("отчёт")` | печатает `отчёт` |
 | `parse_scores({"scores": ["8", "10"]})` | `[8.0, 10.0]`, именно `float` |

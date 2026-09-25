@@ -86,7 +86,7 @@ def test_license_accepted_from_either_field():
 
 
 def test_author_accepted_from_either_field():
-    only_name = {**GOOD_INFO, "author_email": None, "author": "Иванов Иван"}
+    only_name = {**GOOD_INFO, "author_email": None, "author": "Алиса Петрова"}
     checks = {check.title: check.ok for check in cp.check_metadata(only_name)}
     assert checks["автор указан"]
 

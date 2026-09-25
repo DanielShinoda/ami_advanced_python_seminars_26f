@@ -9,9 +9,9 @@
 from gradebook import Auditor, FileStorage, Student, average, find, parse_scores
 
 STUDENTS = [
-    Student("Зеленский", "БПМИ251", [8, 10, 6]),
-    Student("Хныкин", "БПМИ251", [7]),
-    Auditor("Гурьев", "БПМИ255", [9], reason="вольнослушатель"),
+    Student("Алиса", "БПМИ251", [8, 10, 6]),
+    Student("Борис", "БПМИ251", [7]),
+    Auditor("Виктор", "БПМИ255", [9], reason="вольнослушатель"),
 ]
 
 
@@ -24,7 +24,7 @@ def test_average_single():
 
 
 def test_find_hit():
-    found = find(STUDENTS, "Хныкин")
+    found = find(STUDENTS, "Борис")
     assert found is not None
     assert found.group == "БПМИ251"
 

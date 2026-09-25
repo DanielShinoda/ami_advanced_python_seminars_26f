@@ -33,7 +33,7 @@ PYTEST_TIMEOUT_SEC = 120
 
 # Единственный Any, который разрешён: сырой JSON на входе parse_scores.
 ALLOWED_ANY = "def parse_scores(payload: Any) -> list[float]:"
-EXPECTED_SUMMARY = "Иванов — 9.00"
+EXPECTED_SUMMARY = "Алиса — 9.00"
 
 
 @dataclass
@@ -150,7 +150,7 @@ def check_behaviour() -> list[Check]:
     import gradebook as gb  # noqa: PLC0415
 
     checks: list[Check] = []
-    students = [gb.Student("Иванов", "БПМИ251", [8, 10])]
+    students = [gb.Student("Алиса", "БПМИ251", [8, 10])]
 
     def probe(title: str, hint: str, action: Callable[[], tuple[bool, str]]) -> None:
         try:
@@ -189,11 +189,11 @@ def check_behaviour() -> list[Check]:
         buffer = io.StringIO()
         stdout, sys.stdout = sys.stdout, buffer
         try:
-            gb.print_auditors([gb.Auditor("Гурьев", "БПМИ255", [9], reason="в/с")])
+            gb.print_auditors([gb.Auditor("Виктор", "БПМИ255", [9], reason="в/с")])
         finally:
             sys.stdout = stdout
         printed = buffer.getvalue()
-        return "Гурьев" in printed, printed.strip().replace("\n", " | ")[:60]
+        return "Виктор" in printed, printed.strip().replace("\n", " | ")[:60]
 
     # Баг 4 — чисто статический: в рантайме Python на инвариантность list'а
     # не смотрит. Что он починен, говорит mypy; здесь лишь убеждаемся, что
