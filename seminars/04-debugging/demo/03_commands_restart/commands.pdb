@@ -1,0 +1,12 @@
+# Скрипт умирает на первой битой записи, остальные до нас не доходят.
+# Ставим условную точку, привязываем к ней блок команд — и перезапускаем.
+b read_value, record["value"] is None
+commands 1
+silent
+p record["index"]
+p record["sensor"]
+record["value"] = 0.0
+c
+restart
+c
+q

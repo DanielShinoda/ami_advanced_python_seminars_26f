@@ -14,6 +14,7 @@
 | 1 | Packaging: от файла на диске до `pip install` | [`seminars/01-packaging/`](seminars/01-packaging/) |
 | 2 | Типы: что находит mypy и чего не видят тесты | [`seminars/02-typing/`](seminars/02-typing/) |
 | 3 | Внутренности pytest: хуки, scope, свой плагин | [`seminars/03-testing/`](seminars/03-testing/) |
+| 4 | Отладка: pdb из файла команд, охота за NaN | [`seminars/04-debugging/`](seminars/04-debugging/) |
 
 С семинара 3 появляется сквозной проект [`minipipe/`](minipipe/) — он
 живёт до конца курса: сначала мы его тестируем, потом отлаживаем,
@@ -26,6 +27,8 @@
   ускорять, написано на numpy: если знаешь его шапочно, начни отсюда.
 - [`notebooks/logging.ipynb`](notebooks/logging.ipynb) — `LogRecord`,
   фильтры, форматтеры, свой JSON-форматтер, `contextvars`.
+- [`notebooks/introspection.ipynb`](notebooks/introspection.ipynb) —
+  `inspect`, code objects, `dis`, рекурсивный обход `co_consts`.
 
 ## Установка
 
@@ -71,6 +74,7 @@ make nb-clean    снять outputs с ноутбуков перед комми�
 make check-pub   семинар 1: проверить публикацию студента
 make check-typing  семинар 2: проверить починку gradebook.py
 make check-plugin  семинар 3: проверить плагин pytest-maxduration
+make check-hunt    семинар 4: проверить охоту за NaN
 ```
 
 ## Как устроены материалы
