@@ -4,7 +4,7 @@
 #   curl -LsSf https://astral.sh/uv/install.sh | sh (Linux/WSL)
 
 .DEFAULT_GOAL := help
-.PHONY: help sync lint fmt typecheck test nb nb-clean nb-run check-pub check-typing check-plugin check-hunt
+.PHONY: help sync lint fmt typecheck test nb nb-clean nb-run check-pub check-typing check-plugin check-hunt check-limiter check-counter
 
 help:  ## показать этот список
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
@@ -47,3 +47,9 @@ check-plugin:  ## семинар 3: проверить плагин pytest-maxdu
 
 check-hunt:  ## семинар 4: проверить охоту за NaN
 	uv run python seminars/04-debugging/task/check_hunt.py
+
+check-limiter:  ## семинар 5: проверить token bucket на Condition
+	uv run python seminars/05-threads/task/check_limiter.py
+
+check-counter:  ## семинар 6: проверить общий счётчик между процессами
+	uv run python seminars/06-multiprocessing/task/check_counter.py
